@@ -1,0 +1,7 @@
+pip install -U "evalplus @ git+https://github.com/evalplus/evalplus"
+pip install --upgrade "lm-eval>=0.4.7"
+pip install git+https://github.com/ModelCloud/GPTQModel.git
+pip install --upgrade transformers
+pip install --upgrade datasets
+pip install --upgrade accelerate bitsandbytes
+pip install --upgrade sqlitedict
