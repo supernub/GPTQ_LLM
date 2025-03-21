@@ -56,7 +56,7 @@ If they differ significantly, answer "NO" and briefly explain.
 Answer:
 """.strip()
     return generate_response(prompt)
-
+ 
 def load_csv_as_dict(csv_path):
 
     samples_dict = {}
@@ -69,8 +69,8 @@ def load_csv_as_dict(csv_path):
     return samples_dict
 
 def main():
-    origin_csv = "/data/origin_samples.csv"      
-    optimized_csv = "/data/optimized_samples.csv"  
+    origin_csv = "/GPTQ_llm/data/origin_samples.csv"      
+    optimized_csv = "/GPTQ_llm/data/optimized_samples.csv"  
     output_csv = "semantic_result.csv"
 
     origin_dict = load_csv_as_dict(origin_csv)
