@@ -14,7 +14,6 @@ def looks_meaningful(line, min_alpha_ratio=0.7):
       - 行中字母（含空格）占比 >= min_alpha_ratio
       - 排除全是大写或全是小写的极端情况 (可选)
       - 不全是符号/数字/网址等
-    你可根据实际需求进一步添加规则
     """
     stripped = line.strip()
     if not stripped:
@@ -35,7 +34,7 @@ def looks_meaningful(line, min_alpha_ratio=0.7):
     return True
 
 def main():
-    input_file = "c4_en_short50.txt"  # 你已下载好的文本
+    input_file = "c4_en_short50.txt"  
     output_file = "sample_1000.txt"
     
     selected_lines = []
