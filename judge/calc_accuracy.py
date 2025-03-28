@@ -3,7 +3,7 @@ import csv
 def main():
     input_csv = "semantic_result.csv"
     count_ones = 0
-
+    total = 0
     with open(input_csv, "r", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         for row in reader:
