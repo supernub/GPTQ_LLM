@@ -3,7 +3,7 @@ import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
 MODEL_NAME = "deepseek-ai/DeepSeek-R1-Distill-Llama-8B"
-FEWSHOT_FILE = "/GPTQ_LLM/data/prompt.txt"
+FEWSHOT_FILE = "fewshot.txt"
 
 tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, use_fast=False)
 model = AutoModelForCausalLM.from_pretrained(
@@ -13,7 +13,7 @@ model = AutoModelForCausalLM.from_pretrained(
 )
 
 def generate_response(prompt, max_tokens=256, temperature=0.7):
-    """通用文本生成函数"""
+
     inputs = tokenizer(prompt, return_tensors="pt")
     inputs = {k: v.to(model.device) for k, v in inputs.items()}
     
@@ -53,7 +53,7 @@ Answer:
 
 def main():
     # ========== 需要修改的部分：输入/输出 CSV 路径 ==========
-    input_csv = "/GPTQ_LLM/data/sample_opt_valid_1000.csv"  #  origin, optimized, label
+    input_csv = "sample_opt_valid_1000.csv"  #  origin, optimized, label
     output_csv = "judge_result.csv"
     
     # 如果要使用 few-shot, 则加载 prompt
