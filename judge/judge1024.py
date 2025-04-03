@@ -53,8 +53,8 @@ Answer:
 
 def main():
     # ========== 需要修改的部分：输入/输出 CSV 路径 ==========
-    input_csv = "sample_opt_valid_1000.csv"  #  origin, optimized, label
-    output_csv = "judge_result.csv"
+    input_csv = "test_fewshot_optimized.csv"  #  origin, optimized, label
+    output_csv = "judge_fewshot-test_result.csv"
     
     # 如果要使用 few-shot, 则加载 prompt
     fewshot_text = load_fewshot_prompt(FEWSHOT_FILE)

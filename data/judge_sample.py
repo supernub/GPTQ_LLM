@@ -90,7 +90,7 @@ def main():
 
 
         final_judgment = judge_semantic_equivalence(keypoints_A, keypoints_B)
-        # 如果包含"YES"就认为一致(1), 否则认为不一致(0)
+        # 包含"YES"就认为一致(1), 否则认为不一致(0)
         # "YES"或"NO"开头
         judgment_upper = final_judgment.strip().upper()
         if "YES" in judgment_upper:
