@@ -35,7 +35,7 @@ def looks_meaningful(line, min_alpha_ratio=0.7):
 
 def main():
     input_file = "c4_en_short50.txt"  
-    output_file = "sample_1064.txt"
+    output_file = "sample_clean.txt"
     
     selected_lines = []
     with open(input_file, "r", encoding="utf-8") as fin:
