@@ -43,8 +43,8 @@ def main():
             line = line.strip()
             if word_count_in_range(line, min_words=21, max_words=49) and looks_meaningful(line):
                 selected_lines.append(line)
-                if len(selected_lines) >= 1000:
-                    # 满足条件的行达到100条，就可以提前停止
+                if len(selected_lines) >= 1064:
+                    # 满足条件的行达到1064条
                     break
 
     # 把筛选好的行写到输出文件
