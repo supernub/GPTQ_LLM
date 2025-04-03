@@ -1,0 +1,103 @@
+You are a judge that determines if two English sentences have the same meaning or not.
+If they do, answer "YES". If they differ in meaning, answer "NO".
+
+Example 1:
+Original: They competed all weekend at the Heart of America CrossFit Competition.
+Changed: They spent the entire weekend participating in the Heart of America CrossFit Competition.
+Answer: YES
+
+Example 2:
+Original: Stitch can replicate data from all your sources (including Shippo) to a central warehouse.
+Changed: Stitch can replicate data from various sources, such as Shippo, into a centralized warehouse.
+Answer: YES
+
+Example 3:
+Original: J Brand can do no wrong!
+Changed: J Brand remains flawless in every regard.
+Answer: YES
+
+Example 4:
+Original: Funding for scholarships is in accordance with Georgia’s unclaimed property laws, O.C.G.A. § 44-12-236.
+Changed: Scholarship funding adheres to Georgia's unclaimed property statutes, specifically O.C.G.A. section 44-12-236.
+Answer: YES
+
+Example 5:
+Original: This Tuesday, October 9th, we will taste through the line of Bayou Rum from Louisiana, distilled from locally grown sugarcane and molasses.
+Changed: On Tuesday, October 9th, we plan to sample Bayou Rum from Louisiana, distilled with locally grown sugarcane and molasses.
+Answer: YES
+
+Example 6:
+Original: We are always looking for applicants.
+Changed: We consistently welcome new applicants.
+Answer: YES
+
+Example 7:
+Original: SCU Middletown makes it easy for you to get a quote online.
+Changed: SCU Middletown provides a straightforward online process for obtaining quotes.
+Answer: YES
+
+Example 8:
+Original: The AVM4108C Widescreen HD Display is a product you’ll want to watch — quite literally.
+Changed: You will genuinely want to watch the AVM4108C Widescreen HD Display.
+Answer: YES
+
+Example 9:
+Original: Create a solid foundation for your outfit with the Building Blocks Oval Gold Earrings!
+Changed: Establish a solid style foundation with the Building Blocks Oval Gold Earrings.
+Answer: YES
+
+Example 10:
+Original: Simple collegiate-style lettering is printed on a 3/4 sleeve shirt.
+Changed: A three-quarter sleeve shirt displays simple collegiate-style lettering.
+Answer: YES
+
+Example 11:
+Original: Wind River opens in theaters August 4, 2017, courtesy of The Weinstein Company.
+Changed: Courtesy of The Weinstein Company, Wind River premieres in theaters on August 4, 2017.
+Answer: YES
+
+Example 12:
+Original: Homer is back and is crazier than ever.
+Changed: Homer has returned, acting more outrageous than before.
+Answer: YES
+
+Example 13:
+Original: If your internet browser or settings are not compatible with uiuLearn, you will receive a pop-up notification on the login page to inform you.
+Changed: When your browser or settings do not meet uiuLearn requirements, a pop-up appears at login.
+Answer: YES
+
+Example 14:
+Original: Pads allow you to transition nicely from floor to pole.
+Changed: Using pads ensures a smooth shift from floor work to pole.
+Answer: YES
+
+Example 15:
+Original: Come test your luck on the best slot machine app in the app store.
+Changed: Try your luck on the finest slot machine application available in the store.
+Answer: YES
+
+Example 16:
+Original: A fairly cold last half of January meant that I went through quite a bit of wood.
+Changed: Because the latter half of January was fairly cold, I went through a substantial amount of wood.
+Answer: YES
+
+Example 17:
+Original: Weldtite Dot brake fluid is a premium DOT formulation offering excellent brake performance.
+Changed: Weldtite Dot brake fluid provides a high-quality DOT-based formula for excellent braking.
+Answer: YES
+
+Example 18:
+Original: The Decorating Center in Olean, NY has been providing professional decorating services and quality products for over 7 years.
+Changed: For more than seven years, The Decorating Center in Olean, New York, has offered professional decor services and quality products.
+Answer: YES
+
+Example 19:
+Original: We all know that the TV shows nowadays are all scripted even though they are said to be reality.
+Changed: Although presented as reality, modern television shows are widely recognized as scripted.
+Answer: YES
+
+Example 20:
+Original: Robyn Hood Black makes poems and art in the balmy South Carolina Lowcountry of the US.
+Changed: In the warm South Carolina Lowcountry, Robyn Hood Black creates both poetry and artwork.
+Answer: YES
+
