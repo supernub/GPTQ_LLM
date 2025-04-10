@@ -47,14 +47,16 @@ def rewrite_text(text, max_tokens=256):
 input_file = "../data/clean_1024.txt"
 output_file = "output_deepseek.csv"
 
-with open(input_file, "r", encoding="utf-8") as infile, open(output_file, "w", newline='', encoding="utf-8") as outfile:
-    reader = csv.DictReader(infile)
-    writer = csv.writer(outfile)
-    writer.writerow(["Origin", "Modified", "Label"])
 
-    for i, row in enumerate(reader):
-        original = row["Original"]
-        print(f"Processing line {i+1}...")
+with open(input_file, "r", encoding="utf-8") as infile, open(output_file, "w", newline='', encoding="utf-8") as outfile:
+    writer = csv.writer(outfile)
+    writer.writerow(["Original", "Modified", "Label"])
+
+    for i, line in enumerate(infile):
+        original = line.strip()
+        if not original:
+            continue
+        print(f"Processing line {i+1}: {original[:40]}...")
         rewritten = rewrite_text(original)
         writer.writerow([original, rewritten, "0"])
-        time.sleep(0.1)  # Optional: adjust based on model speed
+        time.sleep(0.1)
