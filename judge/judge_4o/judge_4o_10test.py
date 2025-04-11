@@ -88,3 +88,6 @@ def main() -> None:
 
     print(f"\n Accuracy: {correct} / {total} = {acc:.2%}")
     print(f"Done. Results saved to {OUTPUT_CSV}.")
+    
+if __name__ == "__main__":
+    main()

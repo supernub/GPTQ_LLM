@@ -9,7 +9,7 @@ MODEL_NAME   = "gpt-4o"
 FEWSHOT_FILE = "../few_shot/fewshot.txt"
 INPUT_CSV    = "../../modify/output_4o_1024.csv"
 OUTPUT_CSV   = "judge_4o_1024_result.csv"
-RATE_LIMIT_S = 1.2                 
+RATE_LIMIT_S = 1                 
 
 client = OpenAI(api_key="your-api-key")
 
@@ -87,7 +87,7 @@ def main() -> None:
     correct = sum(1 for r in new_rows if str(r.get("Label")) == "1")
     acc = correct / total if total > 0 else 0
 
-    print(f"\n✅ Accuracy: {correct} / {total} = {acc:.2%}")
+    print(f"\n Accuracy: {correct} / {total} = {acc:.2%}")
     print(f"Done. Results saved to {OUTPUT_CSV}.")
 
 if __name__ == "__main__":
