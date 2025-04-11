@@ -5,22 +5,22 @@ import time
 # Initialize OpenAI client
 client = OpenAI(api_key="your-api-key")
 
-# prompt
 REWRITE_PROMPT = """
-Please rewrite the following text according to the rewriting principles used in calibration datasets for quantized LLMs:
+You are an expert in natural language refinement. Rewrite the following text to meet the criteria used in calibration datasets for quantized language models:
 
-Rewriting goals:
-- Preserve all important information (e.g., names, locations, products)
-- Make the text fluent, grammatically correct, and natural sounding
-- Avoid repetitive or template-like structures
-- Promote diversity in phrasing and sentence construction
-- Do not remove or skip any critical details from the original
+Instructions:
+- Preserve all key information (names, locations, products)
+- Ensure fluency, grammaticality, and natural sentence structure
+- Avoid repetition, unnatural phrasing, or template-based expressions
+- Rewrite should be stylistically rich, not literal
+- Do NOT repeat or include the original sentence
+- Output ONLY the rewritten version, no headers or comments
 
-Text to rewrite:
-"{text}"
+Text:
+{text}
 """
 
-# 文本重写函数
+# 
 def rewrite_text(text):
     prompt = REWRITE_PROMPT.format(text=text)
     try:
@@ -37,7 +37,7 @@ def rewrite_text(text):
         return ""
 
 
-input_path = "clean_10_test.txt"
+input_path = "./data/clean_10_test.txt"
 output_path = "output_4o.csv"
 
 with open(input_path, "r", encoding="utf-8") as infile, open(output_path, "w", newline='', encoding="utf-8") as outfile:
@@ -53,4 +53,3 @@ with open(input_path, "r", encoding="utf-8") as infile, open(output_path, "w", n
         writer.writerow([original, modified, "0"])
         time.sleep(1.2) 
 
-print(f"\n Finished! Output saved to: {output_csv}")
