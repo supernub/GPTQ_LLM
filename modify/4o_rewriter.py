@@ -38,7 +38,7 @@ def rewrite_text(text):
         return f"ERROR: {e}"
 
 
-input_path = "./data/clean_10_test.txt"
+input_path = "../data/clean_10_test.txt"
 output_path = "output_4o.csv"
 
 with open(input_path, "r", encoding="utf-8") as infile, open(output_path, "w", newline='', encoding="utf-8") as outfile:
