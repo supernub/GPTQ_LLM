@@ -16,9 +16,9 @@ Instructions:
 - Do NOT repeat or include the original sentence
 - Output ONLY the rewritten version, no headers or comments
 
-Text:
-{text}
-"""
+
+Text to rewrite:
+\"\"\"{text}\"\"\""""
 
 # 
 def rewrite_text(text):
@@ -33,8 +33,9 @@ def rewrite_text(text):
         )
         return response.choices[0].message.content.strip()
     except Exception as e:
-        print(f"Error: {e}")
-        return ""
+        # 输出完整堆栈，且把错误写进 CSV 方便定位
+        traceback.print_exc()
+        return f"ERROR: {e}"
 
 
 input_path = "./data/clean_10_test.txt"
