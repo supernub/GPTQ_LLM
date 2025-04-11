@@ -6,10 +6,10 @@ from openai import OpenAI
 
 # ========= 配置 =========
 MODEL_NAME   = "gpt-4o"            
-FEWSHOT_FILE = "fewshot.txt"
-INPUT_CSV    = "../modify/output_4o_10test.csv"
+FEWSHOT_FILE = "../few_shot/fewshot.txt"
+INPUT_CSV    = "../../modify/output_4o_10test.csv"
 OUTPUT_CSV   = "judge_4o_10test_result.csv"
-RATE_LIMIT_S = 1.2                 
+RATE_LIMIT_S = 1               
 
 client = OpenAI(api_key="your-api-key")
 
@@ -70,18 +70,21 @@ def main() -> None:
             print(f"ERROR: {e}")
             label = -1
 
-        row["label"] = str(label)
+        row["Label"] = str(label)
         new_rows.append(row)
         time.sleep(RATE_LIMIT_S)
 
-    # 写出
+    # 写出 CSV
     with open(OUTPUT_CSV, "w", encoding="utf-8", newline="") as fout:
         fieldnames = ["Original", "Modified", "Label"]
         writer = csv.DictWriter(fout, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(new_rows)
 
-    print(f"\nDone. Results saved to {OUTPUT_CSV}.")
+    # ===== 准确率统计 =====
+    total = len(new_rows)
+    correct = sum(1 for r in new_rows if str(r.get("Label")) == "1")
+    acc = correct / total if total > 0 else 0
 
-if __name__ == "__main__":
-    main()
+    print(f"\n Accuracy: {correct} / {total} = {acc:.2%}")
+    print(f"Done. Results saved to {OUTPUT_CSV}.")
