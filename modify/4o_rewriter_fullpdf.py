@@ -1,111 +1,101 @@
-#!/usr/bin/env python3
-"""
-gptq_rewrite_pipeline_fullpdf.py
-================================
-End-to-end pipeline that
 
-1.  Extracts plain text from GPTQ.pdf  (PyPDF2).
-2.  Sends *the whole* paper (optionally chunked) to GPT-4o to obtain:
+"""
+gptq_rewrite_pipeline_fullpdf.py  –  end-to-end pipeline
+
+1.  Extract plain text from GPTQ.pdf  (PyPDF2).
+2.  Feed the *entire* paper (chunked) to GPT-4o via the new OpenAI SDK:
       • method_summary
       • calib_requirements
       • numbered rewriting guidelines
-3.  Uses those guidelines as a persistent system prompt to rewrite every
-    row in input.csv.
-4.  Saves results to output_optimized.csv with columns:
-    Original, Modified, Label  (Label=0)
------------------------------------------------------------------------
-This version differs from the “excerpt” script only in Part 1.
+3.  Use those guidelines to rewrite every row in input.csv.
+4.  Save to output_4o_fullpdf.csv  →  columns:  Original, Modified, Label(=0)
 """
 
 import csv, json, time, textwrap
 from pathlib import Path
-import openai
-from PyPDF2 import PdfReader        # pip install PyPDF2
+from PyPDF2 import PdfReader          # pip install PyPDF2
+from openai import OpenAI             # pip install --upgrade openai
 
-# ===================== USER CONFIG ==========================================
-API_KEY          = "YOUR_OPENAI_API_KEY"
+# ─────────── USER CONFIG ────────────────────────────────────────────────────
+API_KEY          = "YOUR_OPENAI_API_KEY"   # or set env var OPENAI_API_KEY
 MODEL_NAME       = "gpt-4o"
-PDF_PATH         = "GPTQ.pdf"                     # full paper
-INPUT_CSV        = "input.csv"                    # must have column "origin"
-OUTPUT_CSV       = "output_optimized.csv"
-RATE_LIMIT_SEC   = 1.2
-RESUME           = True                           # skip already-done rows
-CHUNK_SIZE_TOK   = 6000   # ~ ≈ tokens per chunk (GPT-4o safe zone)
-# ============================================================================
+PDF_PATH         = "GPTQ.pdf"
+INPUT_CSV        = "input.csv"             # must contain column "origin"
+OUTPUT_CSV       = "output_4o_fullpdf.csv"
+RATE_LIMIT_SEC   = 1.2                     # pause between requests
+RESUME           = True                    # skip rows already processed
+MAX_CHARS        = 18000                   # per-chunk char cap  (~6–7k tokens)
+# ────────────────────────────────────────────────────────────────────────────
 
-openai.api_key = API_KEY
+# initialise client (new SDK style)
+client = OpenAI(api_key=API_KEY)
 
 
-# ---------- helper -----------------------------------------------------------
+# ─────────── helper: single chat call ───────────────────────────────────────
 def chat(messages, max_tokens=700, temperature=0.7):
-    rsp = openai.ChatCompletion.create(
+    resp = client.chat.completions.create(
         model       = MODEL_NAME,
         messages    = messages,
         max_tokens  = max_tokens,
         temperature = temperature,
     )
-    return rsp.choices[0].message.content.strip()
+    return resp.choices[0].message.content.strip()
 
-# ---------- Part 1  extract PDF ➜ guidelines --------------------------------
+
+# ─────────── PART 1:  PDF → guidelines JSON ─────────────────────────────────
 def pdf_to_text(pdf_path: str) -> str:
-    reader = PdfReader(pdf_path)
-    pages  = [page.extract_text() for page in reader.pages]
-    return "\n".join(pages)
+    pages = [page.extract_text() for page in PdfReader(pdf_path).pages]
+    return "\n".join(pages).replace("\x0c", " ")
 
-def chunk_text(raw: str, max_chars: int = 18000):
-    """Rough chunking by characters so each fits under ~8k-token window."""
-    raw = raw.replace("\x0c", " ")  # page-break symbols
+def chunk_text(raw: str, max_chars: int):
     return textwrap.wrap(raw, max_chars)
 
-def get_guidelines_from_pdf() -> dict:
+def get_guidelines() -> dict:
     cache = Path("guidelines_fullpdf_cache.json")
     if cache.exists():
         return json.loads(cache.read_text())
 
     full_text = pdf_to_text(PDF_PATH)
-    chunks    = chunk_text(full_text)   # usually 2–3 chunks
+    chunks    = chunk_text(full_text, MAX_CHARS)
 
-    # Accumulate paper summary across chunks (“map-reduce”)
+    # ─ map step ─  summarise each chunk
     summaries = []
-    for idx, chunk in enumerate(chunks):
-        sys1 = "You are a careful researcher. Summarise the following paper chunk."
-        user1 = f"[Paper chunk {idx+1}/{len(chunks)}]\n{chunk[:12000]}"
-        summary = chat(
-            [{"role": "system", "content": sys1},
-             {"role": "user",   "content": user1}],
-            max_tokens=700
+    for idx, chunk in enumerate(chunks, 1):
+        sys = "You are a careful researcher. Summarise this paper chunk."
+        user = f"[GPTQ paper chunk {idx}/{len(chunks)}]\n{chunk}"
+        summaries.append(
+            chat([{"role": "system", "content": sys},
+                  {"role": "user",   "content": user}],
+                 max_tokens=700)
         )
-        summaries.append(summary)
         time.sleep(RATE_LIMIT_SEC)
 
-    # Feed concatenated summaries to obtain final guidelines
+    # ─ reduce step ─  derive final guidelines from all summaries
     sys2 = (
         "You are an expert in model quantisation.\n"
-        "Using the collected summaries of the GPTQ paper, produce JSON with:\n"
-        " • method_summary  (2-3 bullets)\n"
-        " • calib_requirements  (explain ideal calibration data)\n"
-        " • guidelines  (numbered rules for rewriting raw text)\n"
-        "Return **valid JSON only**."
+        "Using the collected summaries of GPTQ, output ONLY valid JSON with keys:\n"
+        '  "method_summary": "...",\n'
+        '  "calib_requirements": "...",\n'
+        '  "guidelines": "1) ... 2) ..."\n'
+        "No extra keys, no markdown."
     )
     user2 = "\n\n".join(summaries)
-
-    result = chat(
+    data  = json.loads(chat(
         [{"role": "system", "content": sys2},
          {"role": "user",   "content": user2}],
         max_tokens=800
-    )
+    ))
 
-    data = json.loads(result)   # will raise if JSON invalid
     cache.write_text(json.dumps(data, indent=2), encoding="utf-8")
     return data
 
 
-# ---------- Part 2  rewrite dataset (same as before) -------------------------
+# ─────────── PART 2:  rewrite dataset row-by-row ────────────────────────────
 def rewrite_dataset(guidelines: str):
     system_msg = (
         "You are rewriting text for GPTQ calibration.\n"
-        f"Follow these guidelines EXACTLY:\n{guidelines}\n"
-        "Output ONE rewritten sentence only – no markdown, no commentary."
+        f"Follow these rules EXACTLY:\n{guidelines}\n"
+        "Return ONE fluent English sentence only – no markdown, no commentary."
     )
 
     done = set()
@@ -134,23 +124,22 @@ def rewrite_dataset(guidelines: str):
                      {"role": "user",   "content": user_prompt}],
                     max_tokens=256
                 )
-            except Exception as e:
-                print(f"[ERROR] {e} – blank output recorded.")
+            except Exception as exc:
+                print(f"[ERROR] {exc} – blank output recorded.")
                 modified = ""
 
             writer.writerow({"Original": origin,
                              "Modified": modified,
                              "Label":    0})
-
-            print(f"✓ {origin[:50]}  →  {modified[:50]}")
+            print(f"✓  {origin[:45]}  →  {modified[:45]}")
             time.sleep(RATE_LIMIT_SEC)
 
 
-# ---------- MAIN ------------------------------------------------------------
+# ─────────── MAIN ───────────────────────────────────────────────────────────
 if __name__ == "__main__":
-    print("▶  Step 1 – extracting GPTQ.pdf & generating guidelines…")
-    info = get_guidelines_from_pdf()
-    print("▶  Paper analysed.  Method summary:\n", info["method_summary"])
-    print("▶  Rewriting calibration dataset with extracted rules…")
+    print("▶  Extracting GPTQ.pdf & building guidelines …")
+    info = get_guidelines()
+    print("▶  Paper analysed – summary:\n", info["method_summary"])
+    print("▶  Rewriting calibration dataset …")
     rewrite_dataset(info["guidelines"])
-    print("  All done – see", OUTPUT_CSV)
+    print("✅  Finished.  Output ➜", OUTPUT_CSV)
