@@ -11,5 +11,5 @@ lm_eval_results = GPTQModel.eval(
         EVAL.LM_EVAL.ARC_CHALLENGE,
         EVAL.LM_EVAL.GSM8K_COT,
         EVAL.LM_EVAL.MMLU,
-    ],
+    ]
 )
