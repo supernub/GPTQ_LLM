@@ -33,7 +33,6 @@ def rewrite_text(text):
         )
         return response.choices[0].message.content.strip()
     except Exception as e:
-        # 输出完整堆栈，且把错误写进 CSV 方便定位
         traceback.print_exc()
         return f"ERROR: {e}"
 
