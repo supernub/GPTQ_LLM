@@ -8,9 +8,8 @@ lm_eval_results = GPTQModel.eval(
     model_id,
     framework=EVAL.LM_EVAL,
     tasks=[
-        "arc_challenge",
-        "gsm8k",
-        "mmlu",
-    ],
-    output_file="vortex_v1_lm_eval.json",
+       EVAL.LM_EVAL.ARC_CHALLENGE,
+       EVAL.LM_EVAL.GSM8K_COT,
+       EVAL.LM_EVAL.MMLU
+    ]
 )

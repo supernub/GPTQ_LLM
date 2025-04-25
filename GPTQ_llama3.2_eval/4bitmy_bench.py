@@ -10,9 +10,8 @@ lm_eval_results = GPTQModel.eval(
     framework=EVAL.LM_EVAL,
     tasks=[
         EVAL.LM_EVAL.ARC_CHALLENGE,
-        EVAL.LM_EVAL.GSM8K,
+        EVAL.LM_EVAL.GSM8K_COT,
         EVAL.LM_EVAL.MMLU,
     ],
-    output_file="llama32_1b_gptq4bit_lm_eval.json",
 )
 
