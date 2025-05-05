@@ -1,67 +1,53 @@
-import os, sys, json, subprocess
-from pathlib import Path
+
+import json, subprocess, pathlib, sys, os
 from gptqmodel import GPTQModel
 from gptqmodel.utils.eval import EVAL
 
-# ───────────── GPTQModel  ─────────────
-GPTQ_TASKS = [
-    "arc_challenge",   # ARC
-    "hellaswag",       # HellaSwag
-    "mmlu",            # MMLU
-]
+MODEL_PATH = "Llama-3.2-1B-Instruct-gptqmodel-v53-4bit"
+OUT_PREFIX = "llama32_1b_gptq_v53_4bit"
 
-# lm‑eval CLI 跑剩余 2 个
-CLI_TASKS = ["piqa", "winogrande"]
-
-
-def run_gptq_tasks(model_id: str, out_prefix: str) -> None:
-    """ARC / HellaSwag / MMLU """
-    print(f"▶️  GPTQModel.eval → {', '.join(GPTQ_TASKS)}")
-    GPTQModel.eval(
-        model_id,
-        framework=EVAL.LM_EVAL,
-        tasks=GPTQ_TASKS,
-        output_file=f"{out_prefix}_gptq.json",
-    )
-    print(f"✓ save result → {out_prefix}_gptq.json\n")
-
-
-def run_cli_tasks(model_id: str, out_prefix: str) -> None:
-    """调用 lm_eval CLI 跑 PIQA & Winogrande"""
-    cmd = [
-        sys.executable,
-        "-m",
-        "lm_eval",
-        "--model",
-        "hf",
-        "--model_args",
-        f"pretrained={model_id},dtype=bfloat16",
-        "--tasks",
-        ",".join(CLI_TASKS),
-        "--device",
-        "cuda",
-        "--output_path",
-        f"{out_prefix}_cli.json",
+def run_gptqmodel():
+    tasks = [
+        EVAL.LM_EVAL.ARC_CHALLENGE,
+        EVAL.LM_EVAL.MMLU,
+        EVAL.LM_EVAL.HELLASWAG,
     ]
-    print(f"▶️  lm_eval CLI → {' '.join(CLI_TASKS)}")
+    out_file = f"{OUT_PREFIX}_arc_mmlu_hellaswag.json"
+    GPTQModel.eval(
+        model_id=MODEL_PATH,
+        framework=EVAL.LM_EVAL,
+        tasks=tasks,
+        output_file=out_file,
+    )
+    return out_file
+
+def run_cli(tasks_str, out_file):
+    cmd = [
+        sys.executable, "-m", "lm_eval",
+        "--model", "hf",
+        f"--model_args=pretrained={MODEL_PATH},dtype=bfloat16",
+        "--tasks", tasks_str,
+        "--device", "cuda",
+        f"--output_path={out_file}",
+    ]
+    print("Running:", " ".join(cmd))
     subprocess.run(cmd, check=True)
-    print(f"✓ save result → {out_prefix}_cli.json\n")
+    return out_file
 
-
-def main() -> None:
-    if len(sys.argv) < 2:
-        print("用法: python run_5bench.py /path/")
-        sys.exit(1)
-
-    model_id = sys.argv[1]
-
-    out_prefix = Path(model_id).name.replace("/", "_")
-
-    run_gptq_tasks(model_id, out_prefix)
-    run_cli_tasks(model_id, out_prefix)
-
-    print("🎉 全部 5 个基准评测完成！")
-
+def merge_results(files, merged_path):
+    merged = {}
+    for f in files:
+        with open(f, "r") as fp:
+            merged.update(json.load(fp))
+    with open(merged_path, "w") as fp:
+        json.dump(merged, fp, indent=2)
+    print("➜  Summary saved to", merged_path)
 
 if __name__ == "__main__":
-    main()
+    pathlib.Path("./results").mkdir(exist_ok=True)
+    os.chdir("./results")           # 所有 JSON 输出到 ./results
+
+    f1 = run_gptqmodel()
+    f2 = run_cli("piqa,winogrande",  f"{OUT_PREFIX}_piqa_winogrande.json")
+
+    merge_results([f1, f2], f"{OUT_PREFIX}_v53_5bench.json")
