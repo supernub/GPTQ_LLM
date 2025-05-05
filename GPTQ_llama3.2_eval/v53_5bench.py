@@ -3,8 +3,6 @@ from pathlib import Path
 from gptqmodel import GPTQModel
 from gptqmodel.utils.eval import EVAL
 
-model_id = "Llama-3.2-1B-Instruct-gptq-v53-4bit"
-
 # ───────────── GPTQModel  ─────────────
 GPTQ_TASKS = [
     "arc_challenge",   # ARC
@@ -52,16 +50,17 @@ def run_cli_tasks(model_id: str, out_prefix: str) -> None:
 
 def main() -> None:
     if len(sys.argv) < 2:
-        print("用法: python v53_5bench.py /path/or/hf_repo")
+        print("用法: python run_5bench.py /path/")
         sys.exit(1)
 
     model_id = sys.argv[1]
+
     out_prefix = Path(model_id).name.replace("/", "_")
 
     run_gptq_tasks(model_id, out_prefix)
     run_cli_tasks(model_id, out_prefix)
 
-    print("🎉 5 bench complete！")
+    print("🎉 全部 5 个基准评测完成！")
 
 
 if __name__ == "__main__":
