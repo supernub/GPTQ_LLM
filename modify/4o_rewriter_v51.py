@@ -27,17 +27,18 @@ Your only goal is to rewrite calibration sentences so they (a) keep every fact, 
 GPTQ recap (for context only): uses a second‑order error objective ΔW‖X‖², processes weights in fixed order with block‑wise lazy updates, and stabilises updates via Cholesky decomposition. Calibration text that exercises varied syntax, topics, and numerical ranges improves quantisation quality.
 """.strip()
 
+# ───────── USER_RULES ─────────────────────────────────
 USER_RULES = """
 Rewrite policy – follow ALL rules:
 
 1. **Semantic fidelity** – Do not change or remove any facts, numbers, units, names, or relationships present in the original sentence.
-2. **Style lottery** – For each rewrite randomly pick ONE style:  
-   • Narrative   • Expository   • First‑person reflection  
-   • Dialogue (two speakers, one sentence each)   • Instructional tip
+2. **Style lottery** – For each rewrite randomly pick ONE style **(dialogue style removed)**:  
+   • Narrative   • Expository   • First‑person reflection   • Instructional tip
 3. **Natural flow** – No bullet points, no list markers, no template wording.
 4. **Numerals** – You may include up to 3 numerals or dates; never dense tables or ID strings.
 5. **Length** – Produce ONE complete English sentence ≤ 55 words. If longer, truncate gracefully.
-6. **Output format** – Return ONLY the rewritten sentence; no quotes, no markdown, no extra whitespace.
+6. **No meta‑narrative** – Do **NOT** add framing phrases like “In a lively discussion,” “One speaker asks,” stage directions, or any mention of speakers.
+7. **Output format** – Return ONLY the rewritten sentence; no quotes, no markdown, no extra whitespace.
 
 One‑shot example  
 • Original: Mount Kilimanjaro stands 5,895 m tall in Tanzania.  
