@@ -2,7 +2,7 @@ import json, subprocess, pathlib, sys, os
 from gptqmodel import GPTQModel
 from gptqmodel.utils.eval import EVAL
 
-MODEL_PATH = "Llama-3.2-1B-Instruct-gptqmodel-v53-4bit"
+MODEL_PATH = "Llama-3.2-1B-Instruct-gptq-v53-4bit"
 OUT_PREFIX = "llama32_1b_gptq_v53_4bit"
 
 def run_gptqmodel():
