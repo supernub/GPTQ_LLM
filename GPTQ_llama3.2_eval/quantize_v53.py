@@ -1,7 +1,7 @@
 from gptqmodel import GPTQModel, QuantizeConfig
 
-model_id = "meta-llama/Llama-3.2-1B-Instruct"
-quant_path = "Llama-3.2-1B-Instruct-gptq-v53-4bit"
+model_id = "meta-llama/Llama-3.2-1B"
+quant_path = "Llama-3.2-1B-gptq-v53-4bit"
 
 with open("4o_v53.txt", "r", encoding="utf-8") as f:
     calibration_dataset = [line.strip() for line in f if line.strip()]
