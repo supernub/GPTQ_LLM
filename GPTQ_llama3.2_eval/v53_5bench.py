@@ -2,8 +2,11 @@ import json, subprocess, pathlib, sys, os
 from gptqmodel import GPTQModel
 from gptqmodel.utils.eval import EVAL
 
-MODEL_PATH = "Llama-3.2-1B-Instruct-gptq-v53-4bit"
+BASE_DIR   = pathlib.Path(__file__).resolve().parent
+MODEL_PATH = (BASE_DIR / "Llama-3.2-1B-Instruct-gptq-v53-4bit").as_posix()
+
 OUT_PREFIX = "llama32_1b_gptq_v53_4bit"
+RESULT_DIR = BASE_DIR / "result"         
 
 def run_gptqmodel():
     tasks = [
@@ -11,12 +14,12 @@ def run_gptqmodel():
         EVAL.LM_EVAL.MMLU,
         EVAL.LM_EVAL.HELLASWAG,
     ]
-    out_file = f"{OUT_PREFIX}_arc_mmlu_hellaswag.json"
+    out_file = RESULT_DIR / f"{OUT_PREFIX}_arc_mmlu_hellaswag.json"
     GPTQModel.eval(
         model_id=MODEL_PATH,
         framework=EVAL.LM_EVAL,
         tasks=tasks,
-        output_file=out_file,
+        output_file=out_file.as_posix(),
     )
     return out_file
 
@@ -43,10 +46,13 @@ def merge_results(files, merged_path):
     print("➜  Summary saved to", merged_path)
 
 if __name__ == "__main__":
-    pathlib.Path("./results").mkdir(exist_ok=True)
-    os.chdir("./results")
+    RESULT_DIR.mkdir(exist_ok=True)       
+    os.chdir(RESULT_DIR)                  
 
     f1 = run_gptqmodel()
-    f2 = run_cli("piqa,winogrande",  f"{OUT_PREFIX}_piqa_winogrande.json")
+    f2 = run_cli("piqa,winogrande", f"{OUT_PREFIX}_piqa_winogrande.json")
 
-    merge_results([f1, f2], f"{OUT_PREFIX}_v53_5bench.json")
+    merge_results(
+        [f1, pathlib.Path(f2)],
+        f"{OUT_PREFIX}_v53_5bench.json"
+    )
