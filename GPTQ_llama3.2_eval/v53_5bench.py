@@ -1,4 +1,3 @@
-
 import json, subprocess, pathlib, sys, os
 from gptqmodel import GPTQModel
 from gptqmodel.utils.eval import EVAL
@@ -45,7 +44,7 @@ def merge_results(files, merged_path):
 
 if __name__ == "__main__":
     pathlib.Path("./results").mkdir(exist_ok=True)
-    os.chdir("./results")           # 所有 JSON 输出到 ./results
+    os.chdir("./results")
 
     f1 = run_gptqmodel()
     f2 = run_cli("piqa,winogrande",  f"{OUT_PREFIX}_piqa_winogrande.json")
