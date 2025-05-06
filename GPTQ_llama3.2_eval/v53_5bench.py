@@ -21,7 +21,7 @@ from gptqmodel.utils.eval import EVAL
 
 # ────────────────────────────────  配置  ────────────────────────────────
 BASE_DIR   = pathlib.Path(__file__).resolve().parent
-MODEL_PATH = (BASE_DIR / "Llama-3.2-1B-Instruct-gptq-v53-4bit").as_posix()
+MODEL_PATH ="./Llama-3.2-1B-Instruct-gptq-v53-4bit"
 
 OUT_PREFIX = "llama32_1b_gptq_v53_4bit"
 RESULT_DIR = BASE_DIR / "result"               
