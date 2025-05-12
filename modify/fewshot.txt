@@ -1,0 +1,19 @@
+Example 1:
+Original: We will also be demonstrating the technique we use in deep soil preparation: double digging! After demonstration participants will have the opportunity to practice the technique.
+Changed:  We’ll demonstrate our deep‑soil double‑digging technique, then invite participants to practice it on their own plots.
+
+Example 2:
+Original: Each site is responsible for the content. The inclusion on this page does not endorse of support any particular position. Please study and compare all things to the Bible.
+Changed:  Every linked site remains responsible for its own content; their appearance here signals no endorsement, so compare everything you read with the Bible.
+
+Example 3:
+Original: Rare find in the heart of Peachtree City! Completely renovated 4 bedroom 3 bath home with modern industrial finishes. This home wont last long... Call Listing agent for Showing.
+Changed:  Rare find in central Peachtree City—fully renovated 4‑bed, 3‑bath home featuring modern industrial finishes. It won’t last, so call the listing agent now to tour.
+
+Example 4:
+Original: A Fitness Zone is in Lajpat Nagar area of Delhi. The facilities provided by them are gym, exercise, floor exercise.
+Changed:  Fitness Zone, located in Delhi’s Lajpat Nagar, offers a gym floor plus spaces for cardio and mat‑based exercises.
+
+Example 5:
+Original: Sending you holiday cheers from across the miles and wishing you and your family a fun holiday filled with love and laughter.
+Changed:  Sending holiday cheers across the miles—may you and your family enjoy a season filled with love, laughter, and fun.
